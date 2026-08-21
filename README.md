@@ -622,6 +622,11 @@ Mục đích	Ý nghĩa kinh doanh
 
 # Bước 9: Phân tích quy trình nghiệp vụ:
 * **Quy trình 1:** Quy trình đặt xe và phân công tài xế:
+<div align="center">
+  <img src="./docs/diagrams/Quy trình đặt xe và phân công tài xế.jpg"
+       alt="Use Case Diagram"
+       width="1000">
+</div>
 * **Quy trình 2:** Quy trình thực hiện chuyến đi:
 * **Quy trình 1:** Quy trình tính cước và thanh toán:
 # Bước 10: Phân tích quy tắc nghiệp vụ:
