@@ -621,7 +621,9 @@ Mục đích	Ý nghĩa kinh doanh
   * Không có.
 
 # Bước 9: Phân tích quy trình nghiệp vụ:
-
+* **Quy trình 1:** Quy trình đặt xe và phân công tài xế:
+* **Quy trình 2:** Quy trình thực hiện chuyến đi:
+* **Quy trình 1:** Quy trình tính cước và thanh toán:
 # Bước 10: Phân tích quy tắc nghiệp vụ:
 ---
 
