@@ -119,10 +119,13 @@ Mục đích	Ý nghĩa kinh doanh
 ## 5. Actor: Ban Lãnh đạo
 
 * **Xem Báo cáo:** Xem báo cáo thống kê về tổng số chuyến, doanh thu, tỷ lệ chuyến hoàn thành và tỷ lệ hủy chuyến.Tra cứu các chỉ số KPI đánh giá hiệu suất hoạt động của đội ngũ tài xế.
+## . Actor: Hệ thống thanh toán
+
+* **Xử lý thanh toán:** Nhận các yêu cầu thanh toán và xử lý thanh toán.
   
 # Bước 7: Usecase diagram:
 <div align="center">
-  <img src="./docs/diagrams/usecase_diagram.jpg"
+  <img src="./docs/diagrams/UC tổng quát.jpg"
        alt="Use Case Diagram"
        width="1000">
 </div>
@@ -637,7 +640,7 @@ Mục đích	Ý nghĩa kinh doanh
 
 * **Quy trình 1:** Quy trình tính cước và thanh toán:
 <div align="center">
-  <img src="./docs/diagrams/Quy trình đặt xe và phân công tài xế.jpg"
+  <img src="./docs/diagrams/Tính cước và Thanh toán.jpg"
        alt="Use Case Diagram"
        width="1000">
 </div>
