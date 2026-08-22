@@ -630,7 +630,7 @@ Mục đích	Ý nghĩa kinh doanh
 
 * **Quy trình 2:** Quy trình thực hiện chuyến đi:
 <div align="center">
-  <img src="./docs/diagrams/Quy trình đặt xe và phân công tài xế.jpg"
+  <img src="./docs/diagrams/Thực hiện chuyến.jpg"
        alt="Use Case Diagram"
        width="1000">
 </div>
