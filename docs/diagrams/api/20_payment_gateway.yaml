@@ -1,0 +1,58 @@
+openapi: 3.0.0
+info:
+  title: Payment Gateway API
+  version: 1.0.0
+  description: API tích hợp với hệ thống thanh toán để xử lý yêu cầu thanh toán.
+servers:
+  - url: http://localhost:8080/api/v1
+paths:
+  /payments:
+    post:
+      tags: [Payment Gateway]
+      summary: Tạo yêu cầu thanh toán
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [rideId, amount, method]
+              properties:
+                rideId: {type: string, example: ride_001}
+                amount: {type: number, example: 85000}
+                currency: {type: string, example: VND}
+                method:
+                  type: string
+                  enum: [E_WALLET, CARD, CASH]
+                  example: E_WALLET
+      responses:
+        '200':
+          description: Yêu cầu thanh toán được tiếp nhận
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  transactionId: {type: string, example: txn_001}
+                  status: {type: string, enum: [PENDING, PAID, FAILED], example: PENDING}
+                  paymentUrl:
+                    type: string
+                    format: uri
+                    example: https://payment.example/checkout/txn_001
+        '400':
+          description: Yêu cầu thanh toán không hợp lệ
+  /payments/{transactionId}/status:
+    get:
+      tags: [Payment Gateway]
+      summary: Kiểm tra trạng thái thanh toán
+      parameters:
+        - name: transactionId
+          in: path
+          required: true
+          schema: {type: string}
+          example: txn_001
+      responses:
+        '200':
+          description: Trạng thái giao dịch
+        '404':
+          description: Không tìm thấy giao dịch

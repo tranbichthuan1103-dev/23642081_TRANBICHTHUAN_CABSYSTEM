@@ -1,0 +1,75 @@
+openapi: 3.0.0
+info:
+  title: Driver Profile and Vehicle API
+  version: 1.0.0
+  description: API đăng ký tài xế, cập nhật hồ sơ và thông tin phương tiện.
+servers:
+  - url: http://localhost:8080/api/v1
+paths:
+  /drivers/register:
+    post:
+      tags: [Driver Profile]
+      summary: Đăng ký tài khoản tài xế
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DriverRegistration'
+      responses:
+        '201':
+          description: Đăng ký thành công
+        '400':
+          description: Dữ liệu đăng ký không hợp lệ
+  /drivers/me:
+    put:
+      tags: [Driver Profile]
+      summary: Cập nhật hồ sơ tài xế
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DriverProfile'
+      responses:
+        '200':
+          description: Cập nhật thành công
+  /drivers/me/vehicle:
+    put:
+      tags: [Driver Vehicle]
+      summary: Cập nhật thông tin phương tiện
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [licensePlate, vehicleType]
+              properties:
+                licensePlate: {type: string, example: 59A1-12345}
+                vehicleType: {type: string, enum: [MOTORBIKE, CAR_4, CAR_7], example: CAR_4}
+      responses:
+        '200':
+          description: Cập nhật phương tiện thành công
+components:
+  schemas:
+    DriverRegistration:
+      type: object
+      required: [phone, fullName, licensePlate, vehicleType]
+      properties:
+        phone: {type: string, example: "0912345678"}
+        fullName: {type: string, example: Trần Văn B}
+        licensePlate: {type: string, example: 59A1-12345}
+        vehicleType: {type: string, example: CAR_4}
+    DriverProfile:
+      type: object
+      properties:
+        fullName: {type: string, example: Trần Văn B}
+        email: {type: string, format: email, example: tranvanb@example.com}
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
