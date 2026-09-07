@@ -1,0 +1,38 @@
+openapi: 3.0.0
+info:
+  title: Audit Log Administration API
+  version: 1.0.0
+  description: API tra cứu nhật ký lưu vết các thao tác quan trọng của người dùng nội bộ.
+servers:
+  - url: http://localhost:8080/api/v1
+paths:
+  /admin/audit-logs:
+    get:
+      tags: [Administration - Audit Log]
+      summary: Tra cứu Audit Log
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: userId
+          in: query
+          schema: {type: string}
+        - name: action
+          in: query
+          schema: {type: string}
+          example: UPDATE_RIDE_STATUS
+        - name: from
+          in: query
+          schema: {type: string, format: date-time}
+        - name: to
+          in: query
+          schema: {type: string, format: date-time}
+      responses:
+        '200':
+          description: Danh sách Audit Log
+        '403':
+          description: Không có quyền xem Audit Log
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

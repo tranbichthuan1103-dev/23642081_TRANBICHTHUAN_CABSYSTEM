@@ -1,0 +1,44 @@
+openapi: 3.0.0
+info:
+  title: Driver Ride Progress API
+  version: 1.0.0
+  description: API cập nhật tiến độ chuyến đi của tài xế.
+servers:
+  - url: http://localhost:8080/api/v1
+paths:
+  /driver/rides/{rideId}/status:
+    put:
+      tags: [Driver Ride]
+      summary: Cập nhật trạng thái chuyến đi
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: rideId
+          in: path
+          required: true
+          schema: {type: string}
+          example: ride_001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status:
+                  type: string
+                  enum: [DRIVER_ARRIVING, ARRIVED_PICKUP, PICKED_UP, COMPLETED]
+                  example: ARRIVED_PICKUP
+      responses:
+        '200':
+          description: Cập nhật trạng thái thành công
+        '400':
+          description: Chuyển trạng thái không hợp lệ
+        '404':
+          description: Không tìm thấy chuyến đi
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

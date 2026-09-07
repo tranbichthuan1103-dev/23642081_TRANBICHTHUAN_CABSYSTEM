@@ -1,0 +1,44 @@
+openapi: 3.0.0
+info:
+  title: Customer Payment API
+  version: 1.0.0
+  description: API cho khách hàng thanh toán chuyến đi bằng cổng điện tử hoặc tiền mặt.
+servers:
+  - url: http://localhost:8080/api/v1
+paths:
+  /rides/{rideId}/payments:
+    post:
+      tags: [Payment]
+      summary: Thực hiện thanh toán chuyến đi
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: rideId
+          in: path
+          required: true
+          schema: {type: string}
+          example: ride_001
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [method]
+              properties:
+                method:
+                  type: string
+                  enum: [E_WALLET, CARD, CASH]
+                  example: CASH
+      responses:
+        '200':
+          description: Thanh toán thành công hoặc yêu cầu được chuyển đến cổng thanh toán
+        '400':
+          description: Phương thức thanh toán không hợp lệ
+        '409':
+          description: Chuyến đi đã được thanh toán
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,59 @@
+openapi: 3.0.0
+info:
+  title: Customer Authentication API
+  version: 1.0.0
+  description: API đăng ký và đăng nhập khách hàng bằng số điện thoại và OTP.
+servers:
+  - url: http://localhost:8080/api/v1
+paths:
+  /auth/customer/register:
+    post:
+      tags: [Authentication]
+      summary: Đăng ký tài khoản khách hàng
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [phone]
+              properties:
+                phone:
+                  type: string
+                  example: "0901234567"
+      responses:
+        '200':
+          description: Gửi OTP thành công
+        '400':
+          description: Số điện thoại không hợp lệ hoặc đã tồn tại
+  /auth/customer/login:
+    post:
+      tags: [Authentication]
+      summary: Đăng nhập khách hàng bằng OTP
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [phone, otp]
+              properties:
+                phone:
+                  type: string
+                  example: "0901234567"
+                otp:
+                  type: string
+                  example: "123456"
+      responses:
+        '200':
+          description: Đăng nhập thành công
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiJ9...
+        '401':
+          description: OTP không hợp lệ hoặc đã hết hạn
