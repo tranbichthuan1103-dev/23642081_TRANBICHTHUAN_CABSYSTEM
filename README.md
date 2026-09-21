@@ -745,22 +745,11 @@ Hệ thống CAB được phân rã thành 10 Subdomain nghiệp vụ, 1 Generic
 | SD11 | **Identity & Access Management (IAM)** | Xác thực người dùng, quản lý vai trò, phân quyền truy cập và kiểm tra quyền thực hiện thao tác. |
 | SD12 | **Audit Logging** | Ghi nhận và lưu vết các thao tác quản trị hoặc thao tác nhạy cảm để phục vụ kiểm tra, đối soát và xử lý sự cố. |
 
-## 2. Nguyên tắc phân rã theo DDD
-
-Việc phân rã Domain thành các Subdomain được thực hiện dựa trên những nguyên tắc sau:
-
-- **High Cohesion:** Các chức năng trong cùng một Subdomain có mục tiêu và trách nhiệm nghiệp vụ liên quan chặt chẽ.
-- **Loose Coupling:** Các Subdomain hạn chế phụ thuộc trực tiếp vào logic hoặc dữ liệu nội bộ của nhau.
-- **Single Responsibility:** Mỗi Subdomain có trách nhiệm nghiệp vụ chính và ranh giới rõ ràng.
-- **Business Rule Ownership:** Mỗi quy tắc nghiệp vụ quan trọng cần có một Subdomain hoặc module chịu trách nhiệm chính.
-- **Independent Change:** Có thể thay đổi logic bên trong một Subdomain mà hạn chế ảnh hưởng đến các Subdomain khác.
-- **Explicit Communication:** Các Subdomain giao tiếp thông qua API, interface, DTO hoặc Domain Event.
-
 ---
 
-## 3. Mối liên kết giữa các Subdomain
+## 2. Mối liên kết giữa các Subdomain
 
-### 3.1. Sơ đồ liên kết tổng quát
+### 2.1. Sơ đồ liên kết tổng quát
 
 ```mermaid
 flowchart TD
@@ -814,7 +803,7 @@ flowchart TD
 
 ---
 
-## 3.2 Bảng chi tiết mối liên kết
+## 2.2 Bảng chi tiết mối liên kết
 
 | Mã | Subdomain nguồn | Subdomain đích | Nội dung liên kết |
 |---|---|---|---|
