@@ -722,5 +722,139 @@ Các API được phân chia theo từng nhóm chức năng và được lưu tr
 - **Authentication:** Sử dụng cơ chế xác thực phù hợp với từng API, bao gồm Bearer Token/JWT đối với các API yêu cầu đăng nhập.
 
 
+# Phân rã Domain thành các Subdomain theo DDD
 
+## 1. Danh sách các Subdomain và Module
+
+Hệ thống CAB được phân rã thành 10 Subdomain nghiệp vụ, 1 Generic Subdomain về quản lý danh tính và phân quyền, cùng 1 Cross-cutting Module về ghi nhận nhật ký hoạt động.
+
+### 1.1. Core Subdomains
+
+| Mã | Subdomain | Trách nhiệm chính |
+|---|---|---|
+| SD01 | **Ride Booking & Dispatch** | Tiếp nhận yêu cầu đặt xe, tìm tài xế, phân công tài xế và tự động chuyển tiếp yêu cầu khi tài xế từ chối hoặc timeout. |
+| SD02 | **Trip Management** | Quản lý vòng đời chuyến đi, trạng thái chuyến và các quy tắc chuyển trạng thái. |
+
+### 1.2. Supporting Subdomains
+
+| Mã | Subdomain | Trách nhiệm chính |
+|---|---|---|
+| SD03 | **Driver & Fleet Management** | Quản lý hồ sơ tài xế, phương tiện và trạng thái sẵn sàng của tài xế. |
+| SD04 | **Location & ETA** | Quản lý vị trí tài xế, tính khoảng cách và ước tính thời gian đến (ETA). |
+| SD05 | **Pricing & Fare** | Tính giá dự kiến và giá cuối cùng dựa trên thông tin chuyến đi. |
+| SD06 | **Payment** | Xử lý thanh toán tiền mặt, thanh toán điện tử, thử lại giao dịch và xử lý thanh toán thất bại. |
+| SD07 | **Notification** | Gửi thông báo đến khách hàng, tài xế và các bên liên quan tại những mốc sự kiện quan trọng. |
+| SD08 | **Rating & Trip History** | Quản lý đánh giá tài xế và tra cứu lịch sử chuyến đi, giao dịch liên quan. |
+| SD09 | **Operations Management** | Giám sát chuyến đi, theo dõi tài xế và hỗ trợ xử lý các trường hợp chuyến đi bị lỗi. |
+| SD10 | **Reporting & KPI** | Tổng hợp báo cáo về doanh thu, số lượng chuyến, tỷ lệ hoàn thành, tỷ lệ hủy và hiệu suất tài xế. |
+
+### 1.3. Generic Subdomain
+
+| Mã | Subdomain | Trách nhiệm chính |
+|---|---|---|
+| SD11 | **Identity & Access Management (IAM)** | Xác thực người dùng, quản lý vai trò, phân quyền truy cập và kiểm tra quyền thực hiện thao tác. |
+
+### 1.4. Cross-cutting Module
+
+| Mã | Module | Trách nhiệm chính |
+|---|---|---|
+| CM01 | **Audit Logging** | Ghi nhận và lưu vết các thao tác quản trị hoặc thao tác nhạy cảm để phục vụ kiểm tra, đối soát và xử lý sự cố. |
+
+> **Lưu ý:** Audit Logging được tổ chức thành Cross-cutting Module vì được sử dụng xuyên suốt nhiều Subdomain. Module này không sở hữu nghiệp vụ đặt xe, chuyến đi hoặc thanh toán.
+
+---
+
+## 2. Nguyên tắc phân rã theo DDD
+
+Việc phân rã Domain thành các Subdomain được thực hiện dựa trên những nguyên tắc sau:
+
+- **High Cohesion:** Các chức năng trong cùng một Subdomain có mục tiêu và trách nhiệm nghiệp vụ liên quan chặt chẽ.
+- **Loose Coupling:** Các Subdomain hạn chế phụ thuộc trực tiếp vào logic hoặc dữ liệu nội bộ của nhau.
+- **Single Responsibility:** Mỗi Subdomain có trách nhiệm nghiệp vụ chính và ranh giới rõ ràng.
+- **Business Rule Ownership:** Mỗi quy tắc nghiệp vụ quan trọng cần có một Subdomain hoặc module chịu trách nhiệm chính.
+- **Independent Change:** Có thể thay đổi logic bên trong một Subdomain mà hạn chế ảnh hưởng đến các Subdomain khác.
+- **Explicit Communication:** Các Subdomain giao tiếp thông qua API, interface, DTO hoặc Domain Event.
+
+---
+
+## 3. Mối liên kết giữa các Subdomain
+
+### 3.1. Sơ đồ liên kết tổng quát
+
+```mermaid
+flowchart TD
+    IAM["Identity & Access Management"]
+
+    BOOKING["Ride Booking & Dispatch"]
+    TRIP["Trip Management"]
+    DRIVER["Driver & Fleet Management"]
+    LOCATION["Location & ETA"]
+    PRICING["Pricing & Fare"]
+    PAYMENT["Payment"]
+    NOTIFICATION["Notification"]
+    HISTORY["Rating & Trip History"]
+    OPERATIONS["Operations Management"]
+    REPORTING["Reporting & KPI"]
+    AUDIT["Audit Logging"]
+
+    IAM --> BOOKING
+    IAM --> TRIP
+    IAM --> OPERATIONS
+    IAM --> PAYMENT
+    IAM --> REPORTING
+
+    DRIVER --> BOOKING
+    LOCATION --> BOOKING
+    PRICING --> BOOKING
+
+    BOOKING --> TRIP
+    TRIP --> LOCATION
+    TRIP --> PRICING
+    TRIP --> PAYMENT
+    TRIP --> NOTIFICATION
+    TRIP --> HISTORY
+
+    PAYMENT --> NOTIFICATION
+
+    OPERATIONS --> BOOKING
+    OPERATIONS --> TRIP
+    OPERATIONS --> DRIVER
+    OPERATIONS --> PAYMENT
+
+    TRIP --> REPORTING
+    PAYMENT --> REPORTING
+    DRIVER --> REPORTING
+
+    IAM -. "Ghi nhận thao tác" .-> AUDIT
+    OPERATIONS -. "Ghi nhận thao tác" .-> AUDIT
+    TRIP -. "Ghi nhận thao tác" .-> AUDIT
+    PAYMENT -. "Ghi nhận thao tác" .-> AUDIT
+```
+
+---
+
+## 3.2 Bảng chi tiết mối liên kết
+
+| Mã | Subdomain nguồn | Subdomain đích | Nội dung liên kết |
+|---|---|---|---|
+| R01 | Identity & Access Management | Các Subdomain cần bảo vệ | Xác thực người dùng và kiểm tra quyền truy cập. |
+| R02 | Driver & Fleet Management | Ride Booking & Dispatch | Cung cấp thông tin tài xế và trạng thái sẵn sàng. |
+| R03 | Location & ETA | Ride Booking & Dispatch | Cung cấp vị trí và khoảng cách phục vụ việc tìm tài xế. |
+| R04 | Pricing & Fare | Ride Booking & Dispatch | Cung cấp giá dự kiến cho yêu cầu đặt xe. |
+| R05 | Ride Booking & Dispatch | Trip Management | Tạo hoặc xác nhận chuyến đi sau khi tài xế nhận chuyến. |
+| R06 | Trip Management | Location & ETA | Yêu cầu thông tin vị trí và ETA phục vụ theo dõi chuyến đi. |
+| R07 | Trip Management | Pricing & Fare | Yêu cầu tính giá cuối cùng khi chuyến đi hoàn thành. |
+| R08 | Trip Management | Payment | Phát sinh yêu cầu xử lý thanh toán sau khi hoàn thành chuyến đi. |
+| R09 | Trip Management | Notification | Phát sự kiện thay đổi trạng thái để gửi thông báo. |
+| R10 | Trip Management | Rating & Trip History | Cung cấp thông tin chuyến đi hoàn thành để lưu lịch sử và đánh giá. |
+| R11 | Payment | Notification | Gửi thông báo về kết quả thanh toán. |
+| R12 | Operations Management | Trip Management | Giám sát và hỗ trợ xử lý các chuyến đi bị lỗi. |
+| R13 | Operations Management | Driver & Fleet Management | Theo dõi trạng thái tài xế và hỗ trợ nghiệp vụ vận hành. |
+| R14 | Operations Management | Payment | Tra cứu và hỗ trợ xử lý các trường hợp giao dịch có vấn đề. |
+| R15 | Trip Management | Reporting & KPI | Cung cấp dữ liệu hoặc sự kiện liên quan đến chuyến đi. |
+| R16 | Payment | Reporting & KPI | Cung cấp dữ liệu doanh thu và giao dịch. |
+| R17 | Driver & Fleet Management | Reporting & KPI | Cung cấp dữ liệu phục vụ đánh giá hiệu suất tài xế. |
+| R18 | Các Subdomain liên quan | Audit Logging | Ghi nhận những thao tác quản trị hoặc thao tác nhạy cảm. |
+
+---
 
