@@ -728,17 +728,12 @@ Các API được phân chia theo từng nhóm chức năng và được lưu tr
 
 Hệ thống CAB được phân rã thành 10 Subdomain nghiệp vụ, 1 Generic Subdomain về quản lý danh tính và phân quyền, cùng 1 Cross-cutting Module về ghi nhận nhật ký hoạt động.
 
-### 1.1. Core Subdomains
+### 1.1.  Subdomains
 
 | Mã | Subdomain | Trách nhiệm chính |
 |---|---|---|
 | SD01 | **Ride Booking & Dispatch** | Tiếp nhận yêu cầu đặt xe, tìm tài xế, phân công tài xế và tự động chuyển tiếp yêu cầu khi tài xế từ chối hoặc timeout. |
 | SD02 | **Trip Management** | Quản lý vòng đời chuyến đi, trạng thái chuyến và các quy tắc chuyển trạng thái. |
-
-### 1.2. Supporting Subdomains
-
-| Mã | Subdomain | Trách nhiệm chính |
-|---|---|---|
 | SD03 | **Driver & Fleet Management** | Quản lý hồ sơ tài xế, phương tiện và trạng thái sẵn sàng của tài xế. |
 | SD04 | **Location & ETA** | Quản lý vị trí tài xế, tính khoảng cách và ước tính thời gian đến (ETA). |
 | SD05 | **Pricing & Fare** | Tính giá dự kiến và giá cuối cùng dựa trên thông tin chuyến đi. |
@@ -747,22 +742,8 @@ Hệ thống CAB được phân rã thành 10 Subdomain nghiệp vụ, 1 Generic
 | SD08 | **Rating & Trip History** | Quản lý đánh giá tài xế và tra cứu lịch sử chuyến đi, giao dịch liên quan. |
 | SD09 | **Operations Management** | Giám sát chuyến đi, theo dõi tài xế và hỗ trợ xử lý các trường hợp chuyến đi bị lỗi. |
 | SD10 | **Reporting & KPI** | Tổng hợp báo cáo về doanh thu, số lượng chuyến, tỷ lệ hoàn thành, tỷ lệ hủy và hiệu suất tài xế. |
-
-### 1.3. Generic Subdomain
-
-| Mã | Subdomain | Trách nhiệm chính |
-|---|---|---|
 | SD11 | **Identity & Access Management (IAM)** | Xác thực người dùng, quản lý vai trò, phân quyền truy cập và kiểm tra quyền thực hiện thao tác. |
-
-### 1.4. Cross-cutting Module
-
-| Mã | Module | Trách nhiệm chính |
-|---|---|---|
-| CM01 | **Audit Logging** | Ghi nhận và lưu vết các thao tác quản trị hoặc thao tác nhạy cảm để phục vụ kiểm tra, đối soát và xử lý sự cố. |
-
-> **Lưu ý:** Audit Logging được tổ chức thành Cross-cutting Module vì được sử dụng xuyên suốt nhiều Subdomain. Module này không sở hữu nghiệp vụ đặt xe, chuyến đi hoặc thanh toán.
-
----
+| SD12 | **Audit Logging** | Ghi nhận và lưu vết các thao tác quản trị hoặc thao tác nhạy cảm để phục vụ kiểm tra, đối soát và xử lý sự cố. |
 
 ## 2. Nguyên tắc phân rã theo DDD
 
